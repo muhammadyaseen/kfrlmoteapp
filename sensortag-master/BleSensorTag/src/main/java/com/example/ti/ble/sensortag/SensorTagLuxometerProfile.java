@@ -94,8 +94,10 @@ public class SensorTagLuxometerProfile extends GenericBluetoothProfile {
 			this.tRow.sl1.autoScaleBounceBack = true;
 			this.tRow.sl1.setColor(255, 0, 150, 125);
 			this.tRow.setIcon(this.getIconPrefix(), this.dataC.getUuid().toString());
-			
-			this.tRow.title.setText(GattInfo.uuidToName(UUID.fromString(this.dataC.getUuid().toString())));
+
+			//YCHANGE
+			//this.tRow.title.setText(GattInfo.uuidToName(UUID.fromString(this.dataC.getUuid().toString())));
+			this.tRow.title.setText("Luxometer");
 			this.tRow.uuidLabel.setText(this.dataC.getUuid().toString());
 			this.tRow.value.setText("0.0 Lux");
 			this.tRow.periodBar.setProgress(100);
@@ -113,7 +115,8 @@ public class SensorTagLuxometerProfile extends GenericBluetoothProfile {
 				if (c.equals(this.dataC)){
 					Point3D v = Sensor.LUXOMETER.convert(value);
 					if (this.tRow.config == false) this.tRow.value.setText(String.format("%.1f Lux", v.x));
-					this.tRow.sl1.addValue((float)v.x);
+					//this.tRow.sl1.addValue((float)v.x);
+					this.tRow.sl1.addValue((float)0.0);
 				}
 		}
     @Override

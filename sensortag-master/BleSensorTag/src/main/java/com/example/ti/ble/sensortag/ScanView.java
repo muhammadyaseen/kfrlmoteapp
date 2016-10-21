@@ -299,15 +299,25 @@ public class ScanView extends Fragment {
       	name = new String("Unknown device");
       } 
 
-      String descr = name + "\n" + device.getAddress() + "\nRssi: " + rssi + " dBm";
+      if ( name.equals("SensorTag2") || name.equals("CC2650 SensorTag") )
+      {
+        name = "KFRL Mote";     //add our name to mote in place of sensortag name. :) :)
+      }
+
+      String descr = name + "\n" + device.getAddress() + "\nRSSI: " + rssi + " dBm";
       ((TextView) vg.findViewById(R.id.descr)).setText(descr);
       
       ImageView iv = (ImageView)vg.findViewById(R.id.devImage);
-      if (name.equals("SensorTag2") || name.equals("CC2650 SensorTag"))
+
+      /*if (name.equals("SensorTag2") || name.equals("CC2650 SensorTag"))
       	iv.setImageResource(R.drawable.sensortag2_300);
       else {
     	  iv.setImageResource(R.drawable.sensortag_300);
-      }
+      }*/
+
+      //YCHANGE
+      iv.setImageResource(R.drawable.sensortag2_300); //Display this image instead of SensorTag specific images
+
       // Disable connect button when connecting or connected
       Button bv = (Button)vg.findViewById(R.id.btnConnect);
       bv.setEnabled(mConnectTimer == null);

@@ -151,10 +151,11 @@ public class MainActivity extends ViewPagerActivity {
 		// Create the fragments and add them to the view pager and tabs
 		mScanView = new ScanView();
 		mSectionsPagerAdapter.addSection(mScanView, "BLE Device List");
-		
-		HelpView hw = new HelpView();
+
+        //YCHANGE
+		/*HelpView hw = new HelpView();
 		hw.setParameters("help_scan.html", R.layout.fragment_help, R.id.webpage);
-		mSectionsPagerAdapter.addSection(hw, "Help");
+		mSectionsPagerAdapter.addSection(hw, "Help");*/
 
 		// Register the BroadcastReceiver
 		mFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -193,7 +194,8 @@ public class MainActivity extends ViewPagerActivity {
 		case R.id.opt_bt:
 			onBluetooth();
 			break;
-		case R.id.opt_e2e:
+    //YCHANGE
+	/*	case R.id.opt_e2e:
 			onUrl(URL_FORUM);
 			break;
 		case R.id.opt_sthome:
@@ -205,7 +207,7 @@ public class MainActivity extends ViewPagerActivity {
 		case R.id.opt_about:
 			onAbout();
 			break;
-		case R.id.opt_exit:
+*/		case R.id.opt_exit:
 			Toast.makeText(this, "Bye Bye. Have fun...!", Toast.LENGTH_LONG).show();
 			finish();
 			break;
@@ -250,7 +252,7 @@ public class MainActivity extends ViewPagerActivity {
 
 		// License popup on first run
 		if (prefs.getBoolean("firstrun", true)) {
-			onLicense();
+			//onLicense();      YCHANGE
 			prefs.edit().putBoolean("firstrun", false).commit();
 		}
 
@@ -424,7 +426,8 @@ public class MainActivity extends ViewPagerActivity {
 	}
 
 	boolean checkDeviceFilter(String deviceName) {
-		if (deviceName == null)
+		//YCHANGE
+		/*if (deviceName == null)
 			return false;
 
 		int n = mDeviceFilter.length;
@@ -435,6 +438,7 @@ public class MainActivity extends ViewPagerActivity {
 			}
 			return found;
 		} else
+		*/
 			// Allow all devices if the device filter is empty
 			return true;
 	}

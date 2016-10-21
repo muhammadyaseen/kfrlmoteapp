@@ -16,9 +16,9 @@
         android:id="@+id/opt_fwupdate"
         android:title="@string/fwupdate"/>
         -->
-    <item
+<!--    <item
         android:id="@+id/opt_about"
         android:icon="@drawable/ic_action_about" 
-        android:title="@string/about"/>
+        android:title="@string/about"/>-->
 
 </menu>

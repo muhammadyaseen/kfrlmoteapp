@@ -54,11 +54,6 @@
  **************************************************************************************************/
 package com.example.ti.ble.sensortag;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -78,33 +73,31 @@ import android.content.res.XmlResourceParser;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
-// import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.example.ti.ble.btsig.profiles.DeviceInformationServiceProfile;
 import com.example.ti.ble.common.BluetoothLeService;
 import com.example.ti.ble.common.GattInfo;
 import com.example.ti.ble.common.GenericBluetoothProfile;
 import com.example.ti.ble.common.HelpView;
-import com.example.ti.ble.sensortag.R;
-import com.example.ti.ble.ti.profiles.TIOADProfile;
 import com.example.ti.ble.common.IBMIoTCloudProfile;
+import com.example.ti.ble.ti.profiles.TIOADProfile;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+// import android.util.Log;
 
 
-
-@SuppressLint("InflateParams") public class DeviceActivity extends ViewPagerActivity {
+@SuppressLint("InflateParams") public class DeviceActivity_BAK extends ViewPagerActivity {
 	// Log
 	// private static String TAG = "DeviceActivity";
 
@@ -134,14 +127,14 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
 	//GUI
 	private List<GenericBluetoothProfile> mProfiles;
 
-	public DeviceActivity() {
+	public DeviceActivity_BAK() {
 		mResourceFragmentPager = R.layout.fragment_pager;
 		mResourceIdPager = R.id.pager;
 		mFwRev = new String("1.5"); // Assuming all SensorTags are up to date until actual FW revision is read
 	}
 
-	public static DeviceActivity getInstance() {
-		return (DeviceActivity) mThis;
+	public static DeviceActivity_BAK getInstance() {
+		return (DeviceActivity_BAK) mThis;
 	}
 
 	@Override
@@ -158,14 +151,10 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
 		mIsSensorTag2 = false;
 		// Determine type of SensorTagGatt
 		String deviceName = mBluetoothDevice.getName();
-
-        //YCHANGE.. uncomment below if-else and remove the next statement to recover orig.
-		/*if ((deviceName.equals("SensorTag2")) ||(deviceName.equals("CC2650 SensorTag"))) {
+		if ((deviceName.equals("SensorTag2")) ||(deviceName.equals("CC2650 SensorTag"))) {
 			mIsSensorTag2 = true;
 		}
-		else mIsSensorTag2 = false;*/
-
-        mIsSensorTag2 = true;   //YCHANGE - allow all device, not just SensorTag2. placed in position of if-else
+		else mIsSensorTag2 = false;
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		// Log.i(TAG, "Preferences for: " + deviceName);
@@ -177,14 +166,14 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
 		hw.setParameters("help_device.html", R.layout.fragment_help, R.id.webpage);
 		mSectionsPagerAdapter.addSection(hw, "Help");
 		mProfiles = new ArrayList<GenericBluetoothProfile>();
-		progressDialog = new ProgressDialog(DeviceActivity.this);
+		progressDialog = new ProgressDialog(DeviceActivity_BAK.this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setIndeterminate(true);
 		progressDialog.setTitle("Discovering Services");
         progressDialog.setMessage("Warten, Bitte!");
 		progressDialog.setMax(100);
         progressDialog.setProgress(0);
-        //progressDialog.show();
+        progressDialog.show();
 
         // GATT database
 		Resources res = getResources();
@@ -289,8 +278,7 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
 		setBusy(true);
 
 		// Set title bar to device name
-		//setTitle(mBluetoothDevice.getName());
-        setTitle("Sensor\'s View");
+		setTitle(mBluetoothDevice.getName());
 
 		// Create GATT object
 		mBtGatt = BluetoothLeService.getBtGatt();
@@ -361,7 +349,7 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
 	}
 
     ///////////////////////////
-    //TODO: Explore this method. Seems to be the key data movement part. #YASEEN //YCHANGE
+    //TODO: Explore this method. Seems to be the key data movement part. #YASEEN
 	///////////////////////////
     //This receiver services the Actions declared in `BluetoothLeService` class
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
@@ -413,11 +401,8 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
                                 totalCharacteristics += chars.size();
                             }
                             //Special profile for Cloud service
-
-                            //#YASEEN
-                            //mqttProfile = new IBMIoTCloudProfile(context, mBluetoothDevice, null, mBtLeService);
-                            //mProfiles.add(mqttProfile);
-
+                            mqttProfile = new IBMIoTCloudProfile(context, mBluetoothDevice, null, mBtLeService);
+                            mProfiles.add(mqttProfile);
                             if (totalCharacteristics == 0) {
                                 //Something bad happened, we have a problem
                                 runOnUiThread(new Runnable() {
@@ -425,7 +410,7 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
                                     public void run() {
                                         progressDialog.hide();
                                         progressDialog.dismiss();
-                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                        Builder alertDialogBuilder = new Builder(
                                                 context);
                                         alertDialogBuilder.setTitle("Error !");
                                         alertDialogBuilder.setMessage(serviceList.size() + " Services found, but no characteristics found, device will be disconnected !");
@@ -510,7 +495,7 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
                                         lux.grayOutCell(true);
                                     }
                                 }
-                                /*if (SensorTagSimpleKeysProfile.isCorrectService(s)) {
+                                if (SensorTagSimpleKeysProfile.isCorrectService(s)) {
                                     SensorTagSimpleKeysProfile key = new SensorTagSimpleKeysProfile(context,mBluetoothDevice,s,mBtLeService);
                                     mProfiles.add(key);
                                     if (nrNotificationsOn < maxNotifications) {
@@ -533,7 +518,7 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
                                         baro.grayOutCell(true);
                                     }
                                     Log.d("DeviceActivity","Found Barometer !");
-                                }*/
+                                }
                                 if (SensorTagAmbientTemperatureProfile.isCorrectService(s)) {
                                     SensorTagAmbientTemperatureProfile irTemp = new SensorTagAmbientTemperatureProfile(context,mBluetoothDevice,s,mBtLeService);
                                     mProfiles.add(irTemp);
@@ -546,7 +531,7 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
                                     }
                                     Log.d("DeviceActivity","Found Ambient Temperature !");
                                 }
-                                /*if (SensorTagIRTemperatureProfile.isCorrectService(s)) {
+                                if (SensorTagIRTemperatureProfile.isCorrectService(s)) {
                                     SensorTagIRTemperatureProfile irTemp = new SensorTagIRTemperatureProfile(context,mBluetoothDevice,s,mBtLeService);
                                     mProfiles.add(irTemp);
                                     if (nrNotificationsOn < maxNotifications) {
@@ -582,8 +567,8 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
                                     }
                                     Log.d("DeviceActivity","Found Motion !");
 
-                                }*/
-                               /* if (DeviceInformationServiceProfile.isCorrectService(s)) {
+                                }
+                                if (DeviceInformationServiceProfile.isCorrectService(s)) {
                                     DeviceInformationServiceProfile devInfo = new DeviceInformationServiceProfile(context,mBluetoothDevice,s,mBtLeService);
                                     mProfiles.add(devInfo);
                                     devInfo.configureService();
@@ -595,7 +580,7 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
                                     oad.configureService();
                                     mOadService = s;
                                     Log.d("DeviceActivity","Found TI OAD Service");
-                                }*/
+                                }
                                 if ((s.getUuid().toString().compareTo("f000ccc0-0451-4000-b000-000000000000")) == 0) {
                                     mConnControlService = s;
                                 }
@@ -715,7 +700,7 @@ import com.example.ti.ble.common.IBMIoTCloudProfile;
 
         @Override
         protected void onPreExecute() {
-            this.pd = new ProgressDialog(DeviceActivity.this);
+            this.pd = new ProgressDialog(DeviceActivity_BAK.this);
             this.pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             this.pd.setIndeterminate(false);
             this.pd.setTitle("Starting firmware update");

@@ -183,7 +183,7 @@ public class GenericCharacteristicTableRow extends TableRow implements View.OnCl
 		//One Value
 		this.value = new TextView(con) {
 			{
-				setTextSize(TypedValue.COMPLEX_UNIT_PT,8.0f);
+				setTextSize(TypedValue.COMPLEX_UNIT_PT,16.0f);
 				setTextAlignment(TEXT_ALIGNMENT_VIEW_END);
 				setId(4);
 				setVisibility(View.VISIBLE);

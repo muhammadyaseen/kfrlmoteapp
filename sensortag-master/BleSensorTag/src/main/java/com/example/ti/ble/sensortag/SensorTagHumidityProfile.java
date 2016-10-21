@@ -92,8 +92,10 @@ public class SensorTagHumidityProfile extends GenericBluetoothProfile {
 			}
 			
 			this.tRow.setIcon(this.getIconPrefix(), this.dataC.getUuid().toString());
-			
-			this.tRow.title.setText(GattInfo.uuidToName(UUID.fromString(this.dataC.getUuid().toString())));
+
+			//YCHANGE
+			//this.tRow.title.setText(GattInfo.uuidToName(UUID.fromString(this.dataC.getUuid().toString())));
+			this.tRow.title.setText("Humidity");
 			this.tRow.uuidLabel.setText(this.dataC.getUuid().toString());
 			this.tRow.value.setText("0.0%rH");
 			this.tRow.periodBar.setProgress(100);
@@ -120,7 +122,8 @@ public class SensorTagHumidityProfile extends GenericBluetoothProfile {
 					if (this.tRow.config == false) this.tRow.value.setText(String.format("%.1f %%rH", v.x));
 					this.tRow.sl1.maxVal = 100;
 					this.tRow.sl1.minVal = 0;
-					this.tRow.sl1.addValue((float)v.x);
+					//this.tRow.sl1.addValue((float)v.x);
+					this.tRow.sl1.addValue((float)0.0);
 				}
 		}
     @Override

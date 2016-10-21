@@ -92,7 +92,7 @@ public class SensorTagAmbientTemperatureProfile extends GenericBluetoothProfile 
 		this.tRow.setIcon(this.getIconPrefix(), this.dataC.getUuid().toString(),"temperature");
 		
 		//this.tRow.title.setText(GattInfo.uuidToName(UUID.fromString(this.dataC.getUuid().toString())));
-		this.tRow.title.setText("Ambient Temperature Data");
+		this.tRow.title.setText("Ambient Temperature");
 		this.tRow.uuidLabel.setText(this.dataC.getUuid().toString());
 		this.tRow.value.setText("0.0'C");
 		this.tRow.periodMinVal = 200;
@@ -142,7 +142,8 @@ public class SensorTagAmbientTemperatureProfile extends GenericBluetoothProfile 
 				if ((this.isEnabledByPrefs("imperial")) == true) this.tRow.value.setText(String.format("%.1f'F", (v.x * 1.8) + 32));
 				else this.tRow.value.setText(String.format("%.1f'C", v.x));
 			}
-			this.tRow.sl1.addValue((float)v.x);
+			//this.tRow.sl1.addValue((float)v.x);
+			this.tRow.sl1.addValue((float)0.0);
 		}
 	}
 	public static boolean isCorrectService(BluetoothGattService service) {
